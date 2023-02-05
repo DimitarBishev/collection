@@ -1,5 +1,5 @@
 async function fetchImages() {
-  const response = await fetch("https://github.com/DimitarBishev/collection/contents/images");
+  const response = await fetch("https://api.github.com/repos/dimitarbishev/collection/contents/images");
   const data = await response.json();
   const images = data.filter(file => file.name.endsWith(".jpg") || file.name.endsWith(".png"));
   images.sort((a, b) => {
