@@ -1,0 +1,46 @@
+.nav {
+    position: fixed;
+    top: 6%;
+    left: 20%;
+    font-family: 'Bahnschrift', sans-serif;
+    color: white;
+    font-size: xx-large;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background: linear-gradient(0deg, #000000, #ffffff, #000000, #ffffff, #000000);
+    /* background: linear-gradient(0deg, #5676debe, #ff90e9be, #6bec40be, #d6df57be, #ffaa17be); */
+    background-size: 400% 400%;
+    animation: gradient 15s infinite;
+}
+
+div {
+    text-align: center;
+    padding: 1%;
+}
+
+@media only screen and (max-width: 600px) {
+    .nav {
+        font-size: large;
+        left: 5%;
+    }
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 50% 0%;
+    }
+
+    50% {
+        background-position: 50% 100%;
+    }
+
+    100% {
+        background-position: 50% 0%;
+    }
+}
