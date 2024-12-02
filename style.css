@@ -1,11 +1,79 @@
 .nav {
     position: fixed;
     top: 6%;
-    left: 20%;
+    left: 10%;
+    width: 80%;
+    display: flex;
+    justify-content: space-between; /* Space between title and toggle */
+    align-items: center; /* Vertically center items */
     font-family: 'Bahnschrift', sans-serif;
     color: white;
-    font-size: xx-large;
     text-shadow: 3px 3px 3px #000000;
+}
+
+.title {
+    font-size: xx-large;
+    text-align: left;
+}
+
+.menu-toggle {
+    display: none; /* Hidden by default for larger screens */
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    text-shadow: 3px 3px 3px #000000;
+}
+
+.nav-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: right;
+    align-items: right;
+}
+
+.nav-link {
+    font-size: 23px !important;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: transform 0.3s;
+    text-align: right;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+    transform: scale(1.1);
+}
+
+/* Mobile styles */
+@media only screen and (max-width: 600px) {
+    .menu-toggle {
+        display: block; /* Show toggle button on small screens */
+    }
+
+    .nav {
+        width: 90%;
+    }
+
+    .nav-grid {
+        display: none; /* Hide the menu by default */
+        flex-direction: column; /* Stack items vertically */
+        gap: 10px;
+        margin-top: 10px;
+        width: 50%;
+        margin-left: 50%;
+    }
+
+    .nav-grid.active {
+        display: flex; /* Show the menu when toggled */
+    }
+
+    .nav-link {
+        font-size: 21px !important;
+        padding: 0 !important;
+    }
 }
 
 html {
@@ -15,7 +83,6 @@ html {
 body {
     height: 100%;
     background: linear-gradient(0deg, #000000, #ffffff, #000000, #ffffff, #000000);
-    /* background: linear-gradient(0deg, #5676debe, #ff90e9be, #6bec40be, #d6df57be, #ffaa17be); */
     background-size: 400% 400%;
     animation: gradient 15s infinite;
 }
@@ -29,6 +96,10 @@ div {
     .nav {
         font-size: large;
         left: 5%;
+    }
+
+    .nav-link {
+        font-size: medium;
     }
 }
 
@@ -44,4 +115,13 @@ div {
     100% {
         background-position: 50% 0%;
     }
+}
+
+#pano-viewer {
+    border: 2px solid #000;
+    border-radius: 8px;
+}
+
+#pano-list .btn {
+    margin: 5px 0;
 }

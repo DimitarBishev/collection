@@ -9,19 +9,31 @@
     <link href="https://fonts.cdnfonts.com/css/bahnschrift" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-        crossorigin="anonymous"></script>
-    <script src="index.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.css">
+    <script src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js"></script>
+    <script defer src="index.js"></script>
     <title>Gallery</title>
 </head>
 
 <body onload="fetchImages()">
-    <p class="nav">Dimitar Bishev</p>
-    <div id="gallery" class="container">
+    <div class="nav">
+        <span class="title">Dimitar Bishev</span>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            &#9776; <!-- Hamburger icon -->
+        </button>
+        <div class="nav-grid">
+            <a href="#" onclick="showGallery('gallery')" class="nav-link">Gallery</a>
+            <a href="#" onclick="showGallery('panorama')" class="nav-link">Panorama</a>
+        </div>
+    </div>
+    <div id="gallery" class="container"></div>
+    <div id="panorama" class="container" style="display: none;">
+        <div id="pano-viewer" style="width: 100%; height: 500px; margin: 20px auto;"></div>
+        <div id="pano-list" class="row"></div>
     </div>
     <div class="text-center pt-0">
         <p class="h2">Special thanks to PM!</p>
     </div>
 </body>
+
 </html>
