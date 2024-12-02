@@ -1,3 +1,7 @@
+const ROTATE_SPEED = -6;
+const ROTATE_AFTER_INACTIVITY = 2 * 1000;
+let panoramaFetched = false; 
+
 async function fetchImages() {
   const response = await fetch("https://api.github.com/repos/dimitarbishev/collection/contents/images");
   const data = await response.json();
@@ -45,14 +49,16 @@ function displayPanoramas(data) {
       panoThumbnail.classList.add("col-12", "col-md-4", "p-2");
 
       const panoButton = document.createElement("button");
-      panoButton.classList.add("btn", "btn-primary", "w-100");
-      panoButton.innerText = `View Panorama ${index + 1}`;
+      panoButton.classList.add("btn", "btn-light", "w-100");
+      panoButton.innerText = `${pano.name.split(".")[1]}`;
       panoButton.onclick = () => {
           pannellum.viewer('pano-viewer', {
               type: "equirectangular",
               panorama: pano.download_url,
               autoLoad: true,
-              showControls: true
+              showControls: true,
+              autoRotateInactivityDelay: ROTATE_AFTER_INACTIVITY,
+              autoRotate: ROTATE_SPEED
           });
       };
 
@@ -66,7 +72,9 @@ function displayPanoramas(data) {
           type: "equirectangular",
           panorama: panoramas[0].download_url,
           autoLoad: true,
-          showControls: true
+          showControls: true,
+          autoRotateInactivityDelay: ROTATE_AFTER_INACTIVITY,
+          autoRotate: ROTATE_SPEED
       });
   }
 }
@@ -75,8 +83,9 @@ function showGallery(sectionId) {
   document.getElementById("gallery").style.display = sectionId === "gallery" ? "block" : "none";
   document.getElementById("panorama").style.display = sectionId === "panorama" ? "block" : "none";
   if (sectionId === "panorama") {
-      if (!document.getElementById("panorama").hasChildNodes()) {
+      if (!panoramaFetched) {
           fetchPanoramas();
+          panoramaFetched = true;
       }
   }
 }
