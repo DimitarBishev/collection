@@ -29,7 +29,11 @@
     <div id="gallery" class="container"></div>
     <div id="panorama" class="panorama-container" style="display: none;">
         <div id="pano-viewer" style="width: 100%; margin: 20px auto;"></div>
-        <div id="pano-list" class="row"></div>
+        <div class="pano-navigation">
+            <button id="prev-pano" class="btn btn-light" onclick="showPreviousPanorama()">Previous</button>
+            <span id="pano-name" class="pano-name bg-light text-dark text-center fw-bold px-4 py-3 rounded d-inline-block align-middle fs-4">Loading...</span>
+            <button id="next-pano" class="btn btn-light" onclick="showNextPanorama()">Next</button>
+        </div>
     </div>
 </body>
 
