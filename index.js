@@ -5,8 +5,6 @@ const SUPPORTED_PANORAMA_TYPES = ["jpg", "png"];
 
 let imagesCache = null;
 let panoramasCache = null;
-let panoViewer = null;
-let panoContainer = null;
 let currentPanoIndex = 0;
 
 function mapFiles(files, supportedTypes) {
@@ -66,21 +64,16 @@ function displayCurrentPanorama() {
   if (!panoramasCache || panoramasCache.length === 0) return;
 
   const currentPano = panoramasCache[currentPanoIndex];
-  const container = document.getElementById("pano-viewer");
+  const viewer = document.getElementById("pano-viewer");
 
-  // Clear previous content
-  container.innerHTML = "";
-
-  panoContainer = new PANOLENS.ImagePanorama(currentPano.download_url);
-  panoViewer = new PANOLENS.Viewer({
-    container: container,
-    autoRotate: true,
-    autoRotateSpeed: Math.abs(ROTATE_SPEED),
-    autoRotateActivationDuration: ROTATE_AFTER_INACTIVITY,
-    controlBar: true,
+  pannellum.viewer("pano-viewer", {
+    type: "equirectangular",
+    panorama: currentPano.download_url,
+    autoLoad: true,
+    showControls: true,
+    autoRotateInactivityDelay: ROTATE_AFTER_INACTIVITY,
+    autoRotate: ROTATE_SPEED,
   });
-
-  panoViewer.add(panoContainer);
 
   document.getElementById("pano-name").innerText = currentPano.displayName;
 
