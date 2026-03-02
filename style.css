@@ -9,7 +9,7 @@
     font-family: 'Bahnschrift', sans-serif;
     color: white;
     text-shadow: 3px 3px 3px #000000;
-    z-index: 1000; /* High z-index to ensure visibility */
+    z-index: 1000;
 }
 
 .title {
@@ -23,7 +23,7 @@
 }
 
 .menu-toggle {
-    display: none; /* Hidden by default for larger screens */
+    display: none;
     font-size: 24px;
     background: none;
     border: none;
@@ -53,10 +53,15 @@
     transform: scale(1.1);
 }
 
+.nav-link-active {
+    text-decoration: underline;
+    transform: scale(1.1);
+}
+
 /* Mobile styles */
 @media only screen and (max-width: 600px) {
     .menu-toggle {
-        display: block; /* Show toggle button on small screens */
+        display: block;
     }
 
     .nav {
@@ -64,8 +69,8 @@
     }
 
     .nav-grid {
-        display: none; /* Hide the menu by default */
-        flex-direction: column; /* Stack items vertically */
+        display: none;
+        flex-direction: column;
         gap: 10px;
         margin-top: 10px;
         width: 50%;
@@ -73,7 +78,7 @@
     }
 
     .nav-grid.active {
-        display: flex; /* Show the menu when toggled */
+        display: flex;
     }
 
     .nav-link {
@@ -156,12 +161,12 @@ div {
 }
 
 .btn-custom {
-    background-color: black; /* Black background */
-    color: white; /* White text */
-    border: 1px solid black; /* Optional border */
+    background-color: black;
+    color: white;
+    border: 1px solid black;
 }
 
 .btn-custom:hover {
-    background-color: darkgray; /* Change color on hover */
-    color: black; /* Optional hover effect */
+    background-color: darkgray;
+    color: black;
 }

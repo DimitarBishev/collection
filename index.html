@@ -19,11 +19,11 @@
     <div class="nav">
         <span class="title">Dimitar Bishev</span>
         <button class="menu-toggle" onclick="toggleMenu()">
-            &#9776; <!-- Hamburger icon -->
+            &#9776;
         </button>
         <div class="nav-grid">
-            <a href="#" onclick="showGallery('gallery')" class="nav-link">Gallery</a>
-            <a href="#" onclick="showGallery('panorama')" class="nav-link">Panorama</a>
+            <!-- Gallery tabs injected here dynamically -->
+            <a href="#" onclick="showGallery('panorama')" class="nav-link" data-section="panorama">Panorama</a>
         </div>
     </div>
     <div id="gallery" class="container"></div>

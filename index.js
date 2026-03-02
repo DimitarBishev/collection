@@ -3,9 +3,10 @@ const ROTATE_AFTER_INACTIVITY = 2 * 1000;
 const SUPPORTED_IMAGE_TYPES = ["jpg", "png", "gif"];
 const SUPPORTED_PANORAMA_TYPES = ["jpg", "png"];
 
-let imagesCache = null;
+let foldersCache = {}; // { folderName: [images] }
 let panoramasCache = null;
 let currentPanoIndex = 0;
+let activeTab = null;
 
 function mapFiles(files, supportedTypes) {
   return files
@@ -22,17 +23,94 @@ function mapFiles(files, supportedTypes) {
 }
 
 async function fetchImages() {
-  if (imagesCache) {
-    displayImages(imagesCache, "gallery");
+  try {
+    // Fetch the top-level images directory to get subfolders
+    const response = await fetch(
+      "https://api.github.com/repos/dimitarbishev/collection/contents/images"
+    );
+    const data = await response.json();
+
+    // Separate folders from files
+    const folders = data.filter((item) => item.type === "dir");
+    const rootFiles = data.filter((item) => item.type === "file");
+
+    const navGrid = document.querySelector(".nav-grid");
+
+    // Clear existing gallery nav links (keep panorama)
+    const existingGalleryLinks = navGrid.querySelectorAll(".gallery-nav-link");
+    existingGalleryLinks.forEach((el) => el.remove());
+
+    // If there are subfolders, create a tab for each
+    if (folders.length > 0) {
+      for (const folder of folders) {
+        const link = document.createElement("a");
+        link.href = "#";
+        link.classList.add("nav-link", "gallery-nav-link");
+        link.dataset.folder = folder.name;
+        link.textContent = capitalize(folder.name);
+        link.onclick = (e) => {
+          e.preventDefault();
+          showFolderGallery(folder.name, folder.url);
+        };
+        // Insert before panorama link
+        const panoramaLink = navGrid.querySelector("[data-section='panorama']");
+        navGrid.insertBefore(link, panoramaLink);
+      }
+
+      // Load the first folder by default
+      await showFolderGallery(folders[0].name, folders[0].url);
+    } else {
+      // Fallback: no subfolders, load root images directly
+      const link = document.createElement("a");
+      link.href = "#";
+      link.classList.add("nav-link", "gallery-nav-link");
+      link.dataset.folder = "gallery";
+      link.textContent = "Gallery";
+      link.onclick = (e) => {
+        e.preventDefault();
+        showGallery("gallery");
+      };
+      const panoramaLink = navGrid.querySelector("[data-section='panorama']");
+      navGrid.insertBefore(link, panoramaLink);
+
+      const images = mapFiles(rootFiles, SUPPORTED_IMAGE_TYPES);
+      foldersCache["gallery"] = images;
+      displayImages(images, "gallery");
+      setActiveTab("gallery");
+      document.getElementById("gallery").style.display = "block";
+      document.getElementById("panorama").style.display = "none";
+    }
+  } catch (err) {
+    console.error("Failed to fetch images:", err);
+  }
+}
+
+async function showFolderGallery(folderName, folderUrl) {
+  // Hide panorama, show gallery container
+  document.getElementById("gallery").style.display = "block";
+  document.getElementById("panorama").style.display = "none";
+
+  setActiveTab(folderName);
+
+  if (foldersCache[folderName]) {
+    displayImages(foldersCache[folderName], "gallery");
     return;
   }
 
-  const response = await fetch(
-    "https://api.github.com/repos/dimitarbishev/collection/contents/images"
-  );
-  const data = await response.json();
-  imagesCache = mapFiles(data, SUPPORTED_IMAGE_TYPES);
-  displayImages(imagesCache, "gallery");
+  // Show loading state
+  const container = document.getElementById("gallery");
+  container.innerHTML = '<p style="color:white;text-align:center;padding-top:150px;">Loading...</p>';
+
+  try {
+    const response = await fetch(folderUrl);
+    const data = await response.json();
+    const images = mapFiles(data, SUPPORTED_IMAGE_TYPES);
+    foldersCache[folderName] = images;
+    displayImages(images, "gallery");
+  } catch (err) {
+    console.error("Failed to fetch folder images:", err);
+    container.innerHTML = '<p style="color:white;text-align:center;padding-top:150px;">Failed to load images.</p>';
+  }
 }
 
 function displayImages(data, containerId) {
@@ -64,7 +142,6 @@ function displayCurrentPanorama() {
   if (!panoramasCache || panoramasCache.length === 0) return;
 
   const currentPano = panoramasCache[currentPanoIndex];
-  const viewer = document.getElementById("pano-viewer");
 
   pannellum.viewer("pano-viewer", {
     type: "equirectangular",
@@ -77,7 +154,6 @@ function displayCurrentPanorama() {
 
   document.getElementById("pano-name").innerText = currentPano.displayName;
 
-  // Enable/disable navigation buttons
   document.getElementById("prev-pano").disabled = currentPanoIndex === 0;
   document.getElementById("next-pano").disabled =
     currentPanoIndex === panoramasCache.length - 1;
@@ -103,11 +179,25 @@ function showGallery(sectionId) {
   document.getElementById("panorama").style.display =
     sectionId === "panorama" ? "block" : "none";
   if (sectionId === "panorama") {
+    setActiveTab("panorama");
     fetchPanoramas();
   }
 }
 
+function setActiveTab(name) {
+  activeTab = name;
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    const isActive =
+      link.dataset.folder === name || link.dataset.section === name;
+    link.classList.toggle("nav-link-active", isActive);
+  });
+}
+
 function toggleMenu() {
   const navGrid = document.querySelector(".nav-grid");
-  navGrid.classList.toggle("active"); // Toggles visibility of the menu
+  navGrid.classList.toggle("active");
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
